@@ -1,0 +1,946 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#"
+     xml:base="https://mis.cs.univie.ac.at/ontologies/2021SS/mst"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:ns="http://www.w3.org/2003/06/sw-vocab-status/ns#"
+     xmlns:mst="https://mis.cs.univie.ac.at/ontologies/2021SS/mst"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:wot="http://xmlns.com/wot/0.1/"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
+     xmlns:mst1="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:ma-ont="http://www.w3.org/ns/ma-ont#">
+    <owl:Ontology rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst">
+        <owl:imports rdf:resource="http://www.w3.org/ns/ma-ont"/>
+        <owl:imports rdf:resource="http://xmlns.com/foaf/0.1/"/>
+        <rdfs:comment>An ontology that describes social media platforms</rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#contentOf -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#contentOf">
+        <owl:inverseOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasContent"/>
+        <rdfs:domain rdf:resource="http://www.w3.org/ns/ma-ont#MediaResource"/>
+        <rdfs:range rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+        <rdfs:comment xml:lang="en">Which Post(s) a given media resource was embedded into / referenced by link / etc.</rdfs:comment>
+        <rdfs:label xml:lang="en">content of</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasComment -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasComment">
+        <owl:inverseOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isCommentOf"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.w3.org/ns/ma-ont#MediaResource"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <rdfs:label xml:lang="en">has comment</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasCommentedOn -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasCommentedOn">
+        <owl:inverseOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isCommentedBy"/>
+        <rdfs:domain rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.w3.org/ns/ma-ont#MediaResource"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
+        <rdfs:label xml:lang="en">has commented on</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasContent -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasContent">
+        <rdfs:domain rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+        <rdfs:range rdf:resource="http://www.w3.org/ns/ma-ont#MediaResource"/>
+        <rdfs:label xml:lang="en">has content</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasFriend -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#hasFriend">
+        <rdfs:subPropertyOf rdf:resource="http://xmlns.com/foaf/0.1/knows"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:domain rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:range rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:label xml:lang="en">has friend</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isCommentOf -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isCommentOf">
+        <rdfs:domain rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.w3.org/ns/ma-ont#MediaResource"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
+        <rdfs:label xml:lang="en">is comment of</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isCommentedBy -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isCommentedBy">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.w3.org/ns/ma-ont#MediaResource"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:label xml:lang="en">is commented by</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isLikedBy -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isLikedBy">
+        <owl:inverseOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#likes"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.w3.org/ns/ma-ont#MediaResource"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:label xml:lang="en">is liked by</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isMentionedBy -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#isMentionedBy">
+        <owl:inverseOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#mentions"/>
+        <rdfs:label xml:lang="en">is mentioned by</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#likes -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#likes">
+        <rdfs:domain rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.w3.org/ns/ma-ont#MediaResource"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
+        <rdfs:label xml:lang="en">likes</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#mentions -->
+
+    <owl:ObjectProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#mentions">
+        <rdfs:label xml:lang="en">mentions</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#birthday -->
+
+    <owl:DatatypeProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#birthday">
+        <rdfs:domain rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:comment>recommended to use xsd:date format for example YYYY-MM-DD</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#email -->
+
+    <owl:DatatypeProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#email">
+        <rdfs:domain rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>email</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#joined -->
+
+    <owl:DatatypeProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#joined">
+        <rdfs:domain rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+        <rdfs:label xml:lang="en">joined</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#postDate -->
+
+    <owl:DatatypeProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#postDate"/>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#text -->
+
+    <owl:DatatypeProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#text">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+                    <rdf:Description rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <rdfs:comment xml:lang="en">the textual content of a post or comment</rdfs:comment>
+        <rdfs:label xml:lang="en">text</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#uploadDate -->
+
+    <owl:DatatypeProperty rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#uploadDate">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/ns/ma-ont#date"/>
+        <rdfs:label xml:lang="en">upload date</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/ns/ma-ont#Image -->
+
+    <rdf:Description rdf:about="http://www.w3.org/ns/ma-ont#Image">
+        <owl:equivalentClass rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/ma-ont#MediaResource"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://xmlns.com/foaf/0.1/Image -->
+
+    <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/Image"/>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Audio -->
+
+    <owl:Class rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Audio">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/ma-ont#MediaResource"/>
+        <rdfs:comment xml:lang="en">An audio recording / file.</rdfs:comment>
+        <rdfs:label xml:lang="en">Audio</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment -->
+
+    <owl:Class rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment">
+        <owl:disjointWith rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+        <rdfs:comment xml:lang="en">A textual message written by Users that can refer to a Post or other Message.</rdfs:comment>
+        <rdfs:label xml:lang="en">Comment</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Document -->
+
+    <owl:Class rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Document">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/ma-ont#MediaResource"/>
+        <rdfs:label xml:lang="en">Document</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post -->
+
+    <owl:Class rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post">
+        <rdfs:comment xml:lang="en">A (usually textual) User-generated submission in a social media platform.</rdfs:comment>
+        <rdfs:label xml:lang="en">Post</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User -->
+
+    <owl:Class rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User">
+        <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+        <rdfs:comment xml:lang="en">A Person who is a registered user of the social media platform.</rdfs:comment>
+        <rdfs:label xml:lang="en">User</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video -->
+
+    <owl:Class rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/ma-ont#MediaResource"/>
+        <rdfs:comment xml:lang="en">An audio-visual media object.</rdfs:comment>
+        <rdfs:label xml:lang="en">Video</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Audio_LL -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Audio_LL">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Audio"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny"/>
+        <ma-ont:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">critical music reflection of tv-format &quot;supernanny&quot;</ma-ont:description>
+        <ma-ont:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">270</ma-ont:duration>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://soundcloud.com/laloakaii/lukas-the-barbarian</ma-ont:locator>
+        <ma-ont:title rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">La Loakaii - Lukas The Barbarian</ma-ont:title>
+        <uploadDate rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2010-01-10</uploadDate>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Angelo_Lasagna -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Angelo_Lasagna">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <hasComment rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Maxie_Lasagna"/>
+        <isCommentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Cat"/>
+        <text>Seems like normal cat behavior to me.</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_FK -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_FK">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <isCommentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Youtube"/>
+        <text rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">mei der franz, der hat schon viel geschrieben.</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_MP -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_MP">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <isCommentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MountainPhoto"/>
+        <text rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">wow, what a nice view!! :)</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Maxie_Cat -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Maxie_Cat">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <isCommentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Timothy_Cats"/>
+        <text>Aww, what a cute kitty! Reminds me of my own cat. So adorable &lt;3</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Maxie_Lasagna -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Maxie_Lasagna">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <isCommentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Angelo_Lasagna"/>
+        <text>Ah, I&apos;m relieved!</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Tim_Cat -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Tim_Cat">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <isCommentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Cat"/>
+        <text>What is a &quot;Garfield&quot;???</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_WeatherPost -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_WeatherPost">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <isCommentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01"/>
+        <postDate>2021-04-05T10:00:00</postDate>
+        <text>Same here. Sunny day.</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Document_Wikipedia -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Document_Wikipedia">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Document"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <ma-ont:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Short history about the famous Franz Kafka</ma-ont:description>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://moodle.univie.ac.at/pluginfile.php/1312624/mod_resource/content/1/Wikipedia-Franz-Kafka.txt</ma-ont:locator>
+        <ma-ont:title rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Franz Kafka</ma-ont:title>
+        <uploadDate rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2014-03-22</uploadDate>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <ma-ont:createdIn rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_UpperEgypt"/>
+        <ma-ont:hasRelatedLocation rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_UpperEgypt"/>
+        <foaf:depicts rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <contentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_BB -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_BB">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:depicts rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny"/>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://rymimg.com/lk/f/s/3620401c71ec2d77a3d53acf6b343203/4380812.png</ma-ont:locator>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_DD -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_DD">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:depicts rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.disneyclips.com/imagesnewb/imageslwrakr01/clipdaisy5.gif</ma-ont:locator>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_FlickrPhoto -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_FlickrPhoto">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <ma-ont:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Title from data provided by the Bain News Service on the negative. Date from similar Bain negative: LC-B2-3022-4.
+Photo copyrighted by the Mutual Film Co. who contracted with Pancho Villa to produce a silent film &quot;The life of General Villa&quot; during the Mexican Revolution in 1914. (Source: Flickr Commons project, 2010)
+Photo shows General Francisco &quot;Pancho&quot; Villa (1878-1923) during the Mexican Revolution. (Source: Flickr Commons project, 2010)
+Forms part of: George Grantham Bain Collection (Library of Congress).</ma-ont:description>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://farm2.staticflickr.com/1026/4733201712_b69dd23f48_o.jpg</ma-ont:locator>
+        <ma-ont:title rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Villa</ma-ont:title>
+        <uploadDate rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2010-06-25</uploadDate>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MM -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MM">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:depicts rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MountainPhoto -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MountainPhoto">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <hasComment rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_MP"/>
+        <isCommentedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <ma-ont:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Sometimes weather deviations are not that bad. You can get great view when out of bad weather.</ma-ont:description>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://farm8.staticflickr.com/7031/13384595173_644fa25c69_o.jpg</ma-ont:locator>
+        <ma-ont:title rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Aerial view of Nevado Del Ruiz, Columbia</ma-ont:title>
+        <uploadDate rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2014-03-21</uploadDate>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_SS -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_SS">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:depicts rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://i.ytimg.com/vi/lfxyuZVnNVE/0.jpg</ma-ont:locator>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_TL -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_TL">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:depicts rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://lh5.ggpht.com/_Td135UrGaOU/TJ4znBpqnZI/AAAAAAAAAnU/-9A7gUz26hc/TIMOTHY%20LEARY%20Purpose_thumb%5B1%5D.jpg</ma-ont:locator>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_TumblrPhoto -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_TumblrPhoto">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny"/>
+        <ma-ont:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal"></ma-ont:description>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://24.media.tumblr.com/dfec2435464dbd0e1c5230553438059e/tumblr_n2m427Z4rT1rpdptuo1_500.gif</ma-ont:locator>
+        <ma-ont:title rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">LFA</ma-ont:title>
+        <uploadDate rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2014-03-23</uploadDate>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_UW -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_UW">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://cdn.images.express.co.uk/img/dynamic/galleries/x701/125549.jpg</ma-ont:locator>
+        <ma-ont:title>Under 21 Underwater Rugby Colombian Team, Medellin, Columbia</ma-ont:title>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_WK -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_WK">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <foaf:depicts rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://ifcamedia.org/harvestfields/wp-content/uploads/2012/04/Waldo-image_approved.jpg</ma-ont:locator>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_Medellin -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_Medellin">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Location"/>
+        <ma-ont:isCreationLocationOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_UW"/>
+        <ma-ont:isLocationRelatedTo rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_UW"/>
+        <ma-ont:locationLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</ma-ont:locationLatitude>
+        <ma-ont:locationLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">-75</ma-ont:locationLongitude>
+        <ma-ont:locationName>Medellin, Columbia</ma-ont:locationName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_UpperEgypt -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_UpperEgypt">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Location"/>
+        <ma-ont:isCreationLocationOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM"/>
+        <ma-ont:isLocationRelatedTo rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM"/>
+        <ma-ont:locationAltitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">500</ma-ont:locationAltitude>
+        <ma-ont:locationName>Mountain grassland</ma-ont:locationName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_Vienna -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_Vienna">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Location"/>
+        <ma-ont:isCreationLocationOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#image_cat"/>
+        <ma-ont:isLocationRelatedTo rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#image_cat"/>
+        <ma-ont:locationLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">48</ma-ont:locationLatitude>
+        <ma-ont:locationLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">16</ma-ont:locationLongitude>
+        <ma-ont:locationName>Vienna</ma-ont:locationName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Cat -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Cat">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <hasComment rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Angelo_Lasagna"/>
+        <hasComment rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Tim_Cat"/>
+        <hasContent rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_CatLasagna"/>
+        <postDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-15T01:00:00</postDate>
+        <text>My cat ate some of my leftover lasagna from yesterday. Should I be concerned that it will become the next Garfield??</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Holiday -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Holiday">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <postDate>2019-11-03T13:04:05</postDate>
+        <text>Can&apos;t wait to go on holiday with my kitten Cuddles. We want to see Paris!</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Timothy_Cats -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Timothy_Cats">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+        <hasComment rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Maxie_Cat"/>
+        <hasContent rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#image_cat"/>
+        <mentions rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <postDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-03-20T13:04:05</postDate>
+        <text>Look at my cat doing something cute! @AngeloMerte</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01 -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <hasComment rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_WeatherPost"/>
+        <hasContent rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <mentions rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny"/>
+        <mentions rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <postDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-04T23:11:00</postDate>
+        <text>The weather is fine today.</text>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <foaf:depiction rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM"/>
+        <foaf:img rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Angelo_Lasagna"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Teddy"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <isMentionedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Timothy_Cats"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01"/>
+        <foaf:gender rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">male</foaf:gender>
+        <foaf:name rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Angelo Merte</foaf:name>
+        <foaf:nick rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Angi</foaf:nick>
+        <birthday rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">1907-12-23</birthday>
+        <email rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">angelo.merte@bundestach.de</email>
+        <joined rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">1999-01-02</joined>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Bugs_Bunny">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <foaf:depiction rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_BB"/>
+        <foaf:img rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_BB"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Audio_LL"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_TumblrPhoto"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <isMentionedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_FlickrPhoto"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_TumblrPhoto"/>
+        <foaf:gender rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">male</foaf:gender>
+        <foaf:name rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Bugs Bunny</foaf:name>
+        <foaf:nick rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Buggy</foaf:nick>
+        <birthday rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">1960-03-03</birthday>
+        <email rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">bugs@bunny.com</email>
+        <joined rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2012-07-03</joined>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Daisy_Duck">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <foaf:depiction rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_DD"/>
+        <foaf:img rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_DD"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_WeatherPost"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_FlickrPhoto"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MountainPhoto"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <isMentionedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_FlickrPhoto"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Weather01"/>
+        <foaf:gender rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">female</foaf:gender>
+        <foaf:name rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Daisy Duck</foaf:name>
+        <foaf:nick rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Deezy</foaf:nick>
+        <birthday rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">1960-04-13</birthday>
+        <email rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">daisy@duckduck.go</email>
+        <joined rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2012-05-01</joined>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <foaf:depiction rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MM"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Maxie_Cat"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Maxie_Lasagna"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Cat"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Holiday"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_CatLasagna"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#image_cat"/>
+        <foaf:name>Maximilian Meyer</foaf:name>
+        <birthday>1980-08-02</birthday>
+        <email>max.meyer@mailcat.com</email>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <foaf:depiction rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_SS"/>
+        <foaf:img rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_SS"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Youtube"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Document_Wikipedia"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MountainPhoto"/>
+        <foaf:gender rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">male</foaf:gender>
+        <foaf:name rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Simon Singh</foaf:name>
+        <foaf:nick rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Si</foaf:nick>
+        <birthday rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">1964-09-19</birthday>
+        <email rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">me@simonsingh.net</email>
+        <joined rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2014-02-02</joined>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <foaf:depiction rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_TL"/>
+        <foaf:img rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_TL"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_Tim_Cat"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Document_Wikipedia"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_DD"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Holiday"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Youtube"/>
+        <foaf:gender rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">male</foaf:gender>
+        <foaf:name rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Timothy Francis Leary</foaf:name>
+        <foaf:nick rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Tim</foaf:nick>
+        <birthday rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">1920-10-20</birthday>
+        <email rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">tim@leary.com</email>
+        <joined rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">1996-05-30</joined>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User"/>
+        <foaf:depiction rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_WK"/>
+        <foaf:img rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_WK"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <foaf:knows rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_FK"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_MP"/>
+        <foaf:made rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Document_Wikipedia"/>
+        <hasCommentedOn rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MountainPhoto"/>
+        <hasCommentedOn rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Youtube"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <hasFriend rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_AM"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_FlickrPhoto"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_MountainPhoto"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Image_UW"/>
+        <likes rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Youtube"/>
+        <foaf:gender rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">male</foaf:gender>
+        <foaf:name rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Walter Hofer</foaf:name>
+        <foaf:nick rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Woldo</foaf:nick>
+        <birthday rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">1983-08-14</birthday>
+        <email rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">hofer@unet.univie.ac.at</email>
+        <joined rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2001-09-12</joined>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_CatLasagna -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_CatLasagna">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <contentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Maxie_Cat"/>
+        <ma-ont:description>Video of my cat &quot;Cuddles&quot; eating some leftover lasagna from yesterday&apos;s dinner. Should I be concerned about that??!</ma-ont:description>
+        <ma-ont:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">180</ma-ont:duration>
+        <ma-ont:title>My Cat is Eating My Lasagna?!</ma-ont:title>
+        <uploadDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-15T01:00:00</uploadDate>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Teddy -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Teddy">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Angelo_Merte"/>
+        <ma-ont:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Angelo Merte is in den Building!!</ma-ont:description>
+        <ma-ont:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">375</ma-ont:duration>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://www.youtube.com/watch?v=vcAN-Efb57I</ma-ont:locator>
+        <ma-ont:title rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Umfrage zum Integrationstest (was nicht gesendet wurde)</ma-ont:title>
+        <uploadDate rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2011-05-08</uploadDate>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Youtube -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video_Youtube">
+        <rdf:type rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Video"/>
+        <foaf:maker rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Simon_Singh"/>
+        <hasComment rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Comment_FK"/>
+        <isCommentedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Timothy_Leary"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Walter_Hofer"/>
+        <ma-ont:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Franz Kafka Documentary project for German Literature in Translation class at FSU.</ma-ont:description>
+        <ma-ont:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">332</ma-ont:duration>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://www.youtube.com/watch?v=zpJ9r-BmvYY</ma-ont:locator>
+        <ma-ont:title rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Franz Kafka Mini Documentary</ma-ont:title>
+        <uploadDate rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">2011-02-22</uploadDate>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://mis.cs.univie.ac.at/ontologies/2021SS/mst#image_cat -->
+
+    <owl:NamedIndividual rdf:about="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#image_cat">
+        <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#Image"/>
+        <ma-ont:createdIn rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_Vienna"/>
+        <ma-ont:hasRelatedLocation rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Location_Vienna"/>
+        <contentOf rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#Post_Timothy_Cats"/>
+        <isLikedBy rdf:resource="https://mis.cs.univie.ac.at/ontologies/2021SS/mst#User_Maxie"/>
+        <ma-ont:description>A very cute little cat.</ma-ont:description>
+        <ma-ont:locator rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://www.orlandocatcafe.com/wp-content/uploads/2020/07/14.png</ma-ont:locator>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+
