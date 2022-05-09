@@ -25,8 +25,58 @@ def listUsers():
     """
 
     res = g.query(q)
-    res.parse(format='xml')
-    return res
+    return res.serialize(format='xml')
+
+
+@app.route('/posts')
+def listPosts():
+    q = """
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+        PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+        SELECT DISTINCT ?name
+        WHERE {
+            ?name a mst:Post
+        }
+    """
+
+    res = g.query(q)
+    return res.serialize(format='xml')
+
+
+@app.route('/comments')
+def listComments():
+    q = """
+                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+                    SELECT ?name
+                    WHERE {
+                        ?name a mst:Comment
+                    }
+                """
+
+    res = g.query(q)
+    return res.serialize(format='xml')
+
+
+@app.route('/media')
+def listMedia():  # TODO
+    q = """
+                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+                    SELECT DISTINCT ?name
+                    WHERE {
+                        ?name a mst:Video     
+                    }
+                """
+
+    res = g.query(q)
+    return res.serialize(format='xml')
 
 
 if __name__ == '__main__':
