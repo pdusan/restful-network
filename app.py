@@ -28,6 +28,25 @@ def listUsers():
     return res.serialize(format='xml')
 
 
+@app.route('/users/<name>/posts')
+def userPosts(name):
+    q = """
+                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+                    SELECT DISTINCT ?list
+                    WHERE {
+                        ?s foaf:name ?t 
+                        FILTER(str(?t) = \"""" + str(name) + """ Merte") .
+                        ?s foaf:made ?list .
+                    }
+                """
+
+    res = g.query(q)
+    return res.serialize(format='xml')
+
+
 @app.route('/posts')
 def listPosts():
     q = """
