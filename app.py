@@ -3,7 +3,13 @@ from flask import Flask
 
 g = Graph().parse("v11.owl", format='xml')
 
-app = Flas(__name__)
+app = Flask(__name__)
+
+
+@app.route('/')
+def greeting():
+    return "Hello!"
+
 
 @app.route('/users')
 def listUsers():
@@ -17,8 +23,11 @@ def listUsers():
             ?name a mst:User
         }
     """
+
     res = g.query(q)
+    res.parse(format='xml')
     return res
 
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='8080')
+    app.run(host='0.0.0.0', port='8080', use_reloader='true')
