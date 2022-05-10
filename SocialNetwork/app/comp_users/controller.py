@@ -1,19 +1,11 @@
-from crypt import methods
-from rdflib import Graph
-from flask import Flask, Response, request
 from xml.etree.ElementTree import Element, SubElement, tostring
+from flask import Blueprint, Flask, Response, request
+from rdflib import query
+from app import g
 
-g = Graph().parse("v11.owl", format='xml')
+bp_user = Blueprint('user', __name__, url_prefix='/users')
 
-app = Flask(__name__)
-
-
-@app.route('/')
-def greeting():
-    return "Hello!"
-
-
-@app.route('/users', methods={'GET'})
+@bp_user.route('', methods=['GET'])
 def listUsers():
     q = """
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -35,10 +27,9 @@ def listUsers():
             root, 'user', uri=request.base_url + '/' + row['nickname'])
         child.text = row['fullname']
 
-    return Response(tostring(root), mimetype='application/xml')
+    return Response(tostring(root), mimetype='application/xml'), 202
 
-
-@app.route('/users/<name>')
+@bp_user.route('/<name>')
 def listUser(name):
     q = """
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -55,8 +46,7 @@ def listUser(name):
     res = g.query(q)
     return res.serialize(format='xml')
 
-
-@app.route('/users/<name>/posts')
+@bp_user.route('/<name>/posts')
 def userPosts(name):
     q = """
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -75,8 +65,7 @@ def userPosts(name):
     res = g.query(q)
     return res.serialize(format='xml')
 
-
-@app.route('/users/<name>/comments')
+@bp_user.route('/<name>/comments')
 def userComments(name):
     q = """
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -95,8 +84,7 @@ def userComments(name):
     res = g.query(q)
     return res.serialize(format='xml')
 
-
-@app.route('/users/<name>/likes')
+@bp_user.route('/<name>/likes')
 def userLikes(name):
     q = """
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -114,8 +102,7 @@ def userLikes(name):
     res = g.query(q)
     return res.serialize(format='xml')
 
-
-@app.route('/users/<name>/friends')
+@bp_user.route('/<name>/friends')
 def userFriends(name):
     q = """
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -132,76 +119,3 @@ def userFriends(name):
 
     res = g.query(q)
     return res.serialize(format='xml')
-
-
-@app.route('/posts')
-def listPosts():
-    q = """
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-        PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
-        PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
-
-        SELECT DISTINCT ?name
-        WHERE {
-            ?name a mst:Post
-        }
-    """
-
-    res = g.query(q)
-    return res.serialize(format='xml')
-
-
-@app.route('/comments')
-def listComments():
-    q = """
-                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
-                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
-
-                    SELECT ?name
-                    WHERE {
-                        ?name a mst:Comment
-                    }
-                """
-
-    res = g.query(q)
-    return res.serialize(format='xml')
-
-
-@app.route('/media')
-def listMedia():
-    q = """
-                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
-                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont#>
-
-                    SELECT DISTINCT ?name
-                    WHERE {
-                        ?s rdfs:subClassOf ma-ont:MediaResource .  
-                        ?name a ?s   
-                    }
-                """
-
-    res = g.query(q)
-    return res.serialize(format='xml')
-
-
-@app.route('/media/<type>')
-def listMediaType(type):
-    q = """
-                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
-                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont#>
-
-                    SELECT DISTINCT ?name
-                    WHERE {
-                        ?name a mst:""" + str(type) + """ .     
-                    }
-                """
-
-    res = g.query(q)
-    return res.serialize(format='xml')
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='8080', use_reloader='true')
