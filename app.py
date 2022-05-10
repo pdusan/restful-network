@@ -20,18 +20,20 @@ def listUsers():
         PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
         PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
 
-        SELECT DISTINCT ?nickname
+        SELECT DISTINCT ?nickname ?fullname
         WHERE {
             ?u a mst:User .
-            ?u foaf:nick ?nickname
+            ?u foaf:nick ?nickname .
+            ?u foaf:name ?fullname
         }
     """
 
     res = g.query(q)
     root = Element('users')
     for row in res:
-        child = SubElement(root, 'user')
-        child.text = request.base_url + '/' + row['nickname']
+        child = SubElement(
+            root, 'user', uri=request.base_url + '/' + row['nickname'])
+        child.text = row['fullname']
 
     return Response(tostring(root), mimetype='application/xml')
 
