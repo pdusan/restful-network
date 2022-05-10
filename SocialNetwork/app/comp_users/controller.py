@@ -7,6 +7,11 @@ bp_user = Blueprint('user', __name__, url_prefix='/users')
 
 @bp_user.route('', methods=['GET'])
 def listUsers():
+    if request.args.get('page'):
+        page_num = request.args.get('page')
+    else:
+        page_num = 1
+
     q = """
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
@@ -21,15 +26,50 @@ def listUsers():
     """
 
     res = g.query(q)
-    root = Element('users')
+    res_list = []
     for row in res:
+        res_list.append(row)
+    
+    page_limit = 2
+    total_users = len(res)
+    if total_users % page_limit == 0:
+        max_pages = total_users / page_limit
+    else:
+        max_pages = (total_users % page_limit) + 1
+
+    if int(page_num) > max_pages:
+        page_num = max_pages
+
+    root = Element('response')
+    users = SubElement(root, 'users')
+
+    for i in range (int(page_num) - 1, int(page_num) - 1 + page_limit):
         child = SubElement(
-            root, 'user', uri=request.base_url + '/' + row['nickname'])
-        child.text = row['fullname']
+            users, 'user', uri=request.base_url + '/' + res_list[i]['nickname'])
+        child.text = res_list[i]['fullname']
 
-    return Response(tostring(root), mimetype='application/xml'), 202
+    metadata = SubElement(root, 'metadata')
 
-@bp_user.route('/<name>')
+    count = SubElement(metadata, 'total-users')
+    count.text = str(total_users)
+
+    lim = SubElement(metadata, 'page-limit')
+    lim.text = str(page_limit)
+
+    page = SubElement(metadata, 'page')
+    page.text = str(page_num)
+
+    if int(page_num) > 1:
+        previous = SubElement(metadata, 'previous')
+        previous.text = request.base_url + request.path + "?page=" + str(int(page_num) - 1)
+    
+    if int(page_num) < max_pages:
+        nex = SubElement(metadata, 'next')
+        nex.text = request.base_url + request.path + "?page=" + str(int(page_num) + 1)
+
+    return Response(tostring(root), mimetype='application/xml'), 200
+
+@bp_user.route('/<name>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def listUser(name):
     q = """
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -44,7 +84,7 @@ def listUser(name):
                 """
 
     res = g.query(q)
-    return res.serialize(format='xml')
+    return Response(res.serialize(format='xml'), mimetype='application/xml'), 200
 
 @bp_user.route('/<name>/posts')
 def userPosts(name):
