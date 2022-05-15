@@ -12,11 +12,16 @@ def listPosts():
                     PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
                     PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
 
-                    SELECT ?date ?text ?author
+                    SELECT ?date ?text ?author ?authornick
                     WHERE {
                         ?list rdf:type mst:Post .
                         ?list mst:postDate ?date .
                         ?list mst:text ?text .
+                        OPTIONAL {
+                            ?list foaf:maker ?o .
+                            ?o foaf:nick ?authornick .
+                            ?o foaf:name ?author .
+                        }
                     }
                 """
 
@@ -30,5 +35,8 @@ def listPosts():
         date.text = str(row['date'])
         tex = SubElement(child, 'text')
         tex.text = str(row['text'])
+        if row['authornick']:
+            author = SubElement(child, 'poster', uri = request.host_url + 'users/' + row['authornick'])
+            author.text = str(row['author'])
 
     return Response(tostring(root), mimetype='application/xml'), 200

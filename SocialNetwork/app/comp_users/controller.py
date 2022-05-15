@@ -120,7 +120,6 @@ def listUsers():
             """
 
             g.update(q)
-            print(len(g))
 
             return redirect("/users/"+nick), 201 
     else:
@@ -136,13 +135,14 @@ def listUser(name):
 
                         SELECT ?name ?nickname ?gender ?birthday ?email ?joined
                         WHERE {
+                            ?list a mst:User .
                             ?list foaf:nick ?nickname .
                             FILTER(str(?nickname) = \"""" + str(name) + """\") .
-                            ?list foaf:name ?name .
-                            ?lsit foaf:gender ?gender .
-                            ?list mst:birthday ?birthday .
-                            ?list mst:email ?email .
-                            ?list mst:joined ?joined .
+                            OPTIONAL{?list foaf:name ?name .}
+                            OPTIONAL{?lsit foaf:gender ?gender .}
+                            OPTIONAL{?list mst:birthday ?birthday .}
+                            OPTIONAL{?list mst:email ?email .}
+                            OPTIONAL{?list mst:joined ?joined .}
                         }
                     """
 
@@ -195,6 +195,7 @@ def listUser(name):
                 ?s foaf:nick ?t .
             }
             WHERE {
+                ?s a mst:User .
                 ?s foaf:nick ?t .
                 FILTER(str(?t) = \"""" + str(name) + """\") .
             }
@@ -204,7 +205,52 @@ def listUser(name):
 
         return redirect('/users/'), 204
     
-    # if request.method == "PUT":  TODO, add Maxie, no nickname
+    if request.method == "PUT":  
+        
+        for item in request.form:
+            if not request.form[item] == "":
+                if item in ['name', 'nick', 'gender']:
+                    q = """
+                        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                        PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+                        PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+                        DELETE {
+                            ?s foaf:""" + item + """ ?o .
+                        }
+                        INSERT {
+                            ?s foaf:""" + item + """ \"""" + str(request.form[item]) + """\"
+                        }
+                        WHERE {
+                            ?s a mst:User .
+                            ?s foaf:nick ?t .
+                            FILTER(str(?t) = \"""" + str(name) + """\") .
+                            ?s foaf:""" + item + """ ?o .
+                        }
+                    """
+                    res = g.update(q)
+                else :
+                    q = """
+                        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                        PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+                        PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+                        DELETE {
+                            ?s mst:""" + item + """ ?o .
+                        }
+                        INSERT {
+                            ?s mst:""" + item + """ \"""" + str(request.form[item]) + """\"
+                        }
+                        WHERE {
+                            ?s a mst:User .
+                            ?s mst:nick ?t .
+                            FILTER(str(?t) = \"""" + str(name) + """\") .
+                            ?s mst:""" + item + """ ?o .
+                        }
+                    """
+                    res = g.update(q)
+
+        return "Updated", 200
         
 
 
@@ -325,10 +371,39 @@ def userFriends(name):
                 ?t mst:hasFriend ?s .
             }
             WHERE {
-                ?s mst:hasFriend ?t .
-                FILTER(str(?t) = \"""" + str(nick) + """\") .
+                ?s foaf:nick ?n .
+                FILTER(str(?n) = \"""" + str(name) + """\") .
+                ?t a mst:User .
+                ?t foaf:nick ?nickname
+                FILTER(str(?nickname) = \"""" + str(nick) + """\") .
             }
         """
         res = g.update(q)
 
         return redirect(request.base_url), 204
+    
+    if request.method == 'PUT':
+        nick = request.form['nickname']
+
+        q = """
+            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+            PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+            PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+            INSERT {
+                ?s mst:hasFriend ?t .
+                ?t mst:hasFriend ?s .
+            } 
+            WHERE {
+                ?t foaf:nick ?name .
+                FILTER(str(?name) = \"""" + str(name) + """\") .
+                ?s a mst:User .
+                ?s foaf:nick ?nickname .
+                FILTER(str(?nickname) = \"""" + str(nick) + """\") .
+            }
+        """
+        res = g.update(q)
+
+        return redirect(request.base_url), 200
+    else:
+        return "Bad Request", 400

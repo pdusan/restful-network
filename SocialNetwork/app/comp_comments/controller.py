@@ -1,3 +1,4 @@
+from ast import keyword
 from xml.etree.ElementTree import Element, SubElement, tostring
 from flask import Blueprint, Flask, Response, request
 from rdflib import query
@@ -5,28 +6,61 @@ from app import g
 
 bp_comment = Blueprint('comment', __name__, url_prefix='/comments')
 
+def sparql_contains (words):
+    ret = """"""
+    for word in words:
+        ret += "FILTER CONTAINS(lcase(str(?text)), \""+word+"\") . \n"
+    return ret
+
 @bp_comment.route('')
 def listComments():
-    q = """
-                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
-                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+    if request.args.get('search'):
+        params = request.args.get('search')
+        keywords = params.split()
 
-                    SELECT ?date ?text
-                    WHERE {
-                        ?s foaf:made ?list .
-                        ?list rdf:type mst:Comment .
-                        ?list mst:text ?text .
-                    }
-                """
+        q = """
+                        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                        PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+                        PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+                        SELECT ?date ?text ?search ?count
+                        WHERE {
+                            ?list rdf:type mst:Comment .
+                            VALUES ?search {\"""" + params + """\"} 
+                            ?list mst:text ?text .
+                            """ + sparql_contains(keywords) + """
+                            OPTIONAL {
+                                ?list mst:postDate ?date 
+                            }
+                            BIND(((strlen(?text) - strlen(replace(?text, ?search, ""))) / strlen(?search)) as ?count)
+                        } ORDER BY DESC(?count)
+                    """
+        
+    else:
+        q = """
+                        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                        PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+                        PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+                        SELECT ?date ?text
+                        WHERE {
+                            ?list rdf:type mst:Comment .
+                            ?list mst:text ?text .
+                            OPTIONAL {
+                                ?list mst:postDate ?date 
+                            }
+                        }
+                    """
 
     res = g.query(q)
-    
-    root = Element('response')
 
+    root = Element('response')
+    
     for row in res:
-        child = SubElement(root, 'post')
+        child = SubElement(root, 'comment')
         tex = SubElement(child, 'text')
         tex.text = str(row['text'])
-
+        postDate = SubElement(child, 'postDate')
+        postDate.text = str(row['date'])
+        
     return Response(tostring(root), mimetype='application/xml'), 200
