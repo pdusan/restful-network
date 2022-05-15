@@ -1,6 +1,6 @@
 from unicodedata import name
 from xml.etree.ElementTree import Element, SubElement, tostring
-from flask import Blueprint, Flask, Response, redirect, request
+from flask import Blueprint, Flask, Response, redirect, request, url_for
 from pyparsing import rest_of_line
 from rdflib import query
 from app import g
@@ -171,6 +171,18 @@ def listUser(name):
         child_joined = SubElement(root, 'joined')
         child_joined.text = str(res_list[0]['joined'])
 
+        child_posts = SubElement(root, 'posts')
+        child_posts.text = str(request.base_url  + '/posts')
+
+        child_comments = SubElement(root, 'comments')
+        child_comments.text = str(request.base_url  + '/comments')
+
+        child_likes = SubElement(root, 'likes')
+        child_likes.text = str(request.base_url  + '/likes')
+
+        child_friends = SubElement(root, 'friends')
+        child_friends.text = str(request.base_url  + '/friends')
+
         return Response(tostring(root), mimetype='application/xml'), 200
 
     if request.method == "DELETE":
@@ -192,7 +204,7 @@ def listUser(name):
 
         return redirect('/users/'), 204
     
-    if request.method == "PUT":
+    # if request.method == "PUT":  TODO, add Maxie, no nickname
         
 
 
@@ -203,17 +215,29 @@ def userPosts(name):
                     PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
                     PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
 
-                    SELECT DISTINCT ?list
+                    SELECT DISTINCT ?date ?text
                     WHERE {
                         ?s foaf:nick ?t 
                         FILTER(str(?t) = \"""" + str(name) + """\") .
                         ?s foaf:made ?list .
-                        ?list rdf:type mst:Post
+                        ?list rdf:type mst:Post .
+                        ?list mst:postDate ?date .
+                        ?list mst:text ?text .
                     }
                 """
 
     res = g.query(q)
-    return res.serialize(format='xml')
+    
+    root = Element('response')
+
+    for row in res:
+        child = SubElement(root, 'post')
+        date = SubElement(child, 'postDate')
+        date.text = str(row['date'])
+        tex = SubElement(child, 'text')
+        tex.text = str(row['text'])
+
+    return Response(tostring(root), mimetype='application/xml'), 200
 
 @bp_user.route('/<name>/comments')
 def userComments(name):
@@ -222,17 +246,26 @@ def userComments(name):
                     PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
                     PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
 
-                    SELECT DISTINCT ?list
+                    SELECT ?date ?text
                     WHERE {
                         ?s foaf:nick ?t 
                         FILTER(str(?t) = \"""" + str(name) + """\") .
                         ?s foaf:made ?list .
-                        ?list rdf:type mst:Comment
+                        ?list rdf:type mst:Comment .
+                        ?list mst:text ?text .
                     }
                 """
 
     res = g.query(q)
-    return res.serialize(format='xml')
+    
+    root = Element('response')
+
+    for row in res:
+        child = SubElement(root, 'post')
+        tex = SubElement(child, 'text')
+        tex.text = str(row['text'])
+
+    return Response(tostring(root), mimetype='application/xml'), 200
 
 @bp_user.route('/<name>/likes')
 def userLikes(name):
@@ -252,20 +285,50 @@ def userLikes(name):
     res = g.query(q)
     return res.serialize(format='xml')
 
-@bp_user.route('/<name>/friends')
+@bp_user.route('/<name>/friends', methods=['GET', 'PUT', 'DELETE'])
 def userFriends(name):
-    q = """
-                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
-                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+    if request.method == 'GET':
+        q = """
+                        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                        PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+                        PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
 
-                    SELECT DISTINCT ?list
-                    WHERE {
-                        ?s foaf:nick ?t 
-                        FILTER(str(?t) = \"""" + str(name) + """\") .
-                        ?s mst:hasFriend ?list
-                    }
-                """
+                        SELECT DISTINCT ?nickname ?name
+                        WHERE {
+                            ?s foaf:nick ?t 
+                            FILTER(str(?t) = \"""" + str(name) + """\") .
+                            ?s mst:hasFriend ?list .
+                            ?list foaf:nick ?nickname .
+                            ?list foaf:name ?name .
+                        }
+                    """
 
-    res = g.query(q)
-    return res.serialize(format='xml')
+        res = g.query(q)
+
+        root = Element('Response')
+        for row in res:
+            child = SubElement(root, 'friend', uri = request.host_url + 'users/' + row['nickname'])
+            child.text = str(row['name'])
+
+        return Response(tostring(root), mimetype='application/xml'), 200
+    
+    if request.method == 'DELETE':
+        nick = request.form['nickname']
+
+        q = """
+            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+            PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+            PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+
+            DELETE {
+                ?s mst:hasFriend ?t .
+                ?t mst:hasFriend ?s .
+            }
+            WHERE {
+                ?s mst:hasFriend ?t .
+                FILTER(str(?t) = \"""" + str(nick) + """\") .
+            }
+        """
+        res = g.update(q)
+
+        return redirect(request.base_url), 204

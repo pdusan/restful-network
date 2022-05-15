@@ -12,11 +12,21 @@ def listComments():
                     PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
                     PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
 
-                    SELECT ?name
+                    SELECT ?date ?text
                     WHERE {
-                        ?name a mst:Comment
+                        ?s foaf:made ?list .
+                        ?list rdf:type mst:Comment .
+                        ?list mst:text ?text .
                     }
                 """
 
     res = g.query(q)
-    return res.serialize(format='xml')
+    
+    root = Element('response')
+
+    for row in res:
+        child = SubElement(root, 'post')
+        tex = SubElement(child, 'text')
+        tex.text = str(row['text'])
+
+    return Response(tostring(root), mimetype='application/xml'), 200
