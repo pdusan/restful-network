@@ -7,6 +7,7 @@ from app import g
 
 bp_user = Blueprint('user', __name__, url_prefix='/users')
 
+
 @bp_user.route('', methods=['GET', 'POST'])
 def listUsers():
     if request.method == 'GET':
@@ -46,11 +47,12 @@ def listUsers():
         root = Element('response')
         users = SubElement(root, 'users')
 
-        for i in range (page_limit):
+        for i in range(page_limit):
             try:
                 child = SubElement(
                     users, 'user', uri=request.base_url + '/' + res_list[(int(page_num) - 1) * page_limit + i]['nickname'])
-                child.text = res_list[(int(page_num) - 1) * page_limit + i]['fullname']
+                child.text = res_list[(int(page_num) - 1)
+                                      * page_limit + i]['fullname']
             except:
                 break
 
@@ -67,11 +69,13 @@ def listUsers():
 
         if int(page_num) > 1:
             previous = SubElement(metadata, 'previous')
-            previous.text = request.base_url + request.path + "?page=" + str(int(page_num) - 1)
+            previous.text = request.base_url + request.path + \
+                "?page=" + str(int(page_num) - 1)
 
         if int(page_num) < max_pages:
             nex = SubElement(metadata, 'next')
-            nex.text = request.base_url + request.path + "?page=" + str(int(page_num) + 1)
+            nex.text = request.base_url + request.path + \
+                "?page=" + str(int(page_num) + 1)
 
         return Response(tostring(root), mimetype='application/xml'), 200
     if request.method == 'POST':
@@ -97,7 +101,7 @@ def listUsers():
         res_list = []
         for row in res:
             res_list.append(row)
-        
+
         if res_list[0]:
             return "User with that nickname already exists", 400
         else:
@@ -121,9 +125,10 @@ def listUsers():
 
             g.update(q)
 
-            return redirect("/users/"+nick), 201 
+            return redirect("/users/"+nick), 201
     else:
         return "Bad request", 400
+
 
 @bp_user.route('/<name>', methods=['GET', 'PUT', 'DELETE'])
 def listUser(name):
@@ -172,16 +177,16 @@ def listUser(name):
         child_joined.text = str(res_list[0]['joined'])
 
         child_posts = SubElement(root, 'posts')
-        child_posts.text = str(request.base_url  + '/posts')
+        child_posts.text = str(request.base_url + '/posts')
 
         child_comments = SubElement(root, 'comments')
-        child_comments.text = str(request.base_url  + '/comments')
+        child_comments.text = str(request.base_url + '/comments')
 
         child_likes = SubElement(root, 'likes')
-        child_likes.text = str(request.base_url  + '/likes')
+        child_likes.text = str(request.base_url + '/likes')
 
         child_friends = SubElement(root, 'friends')
-        child_friends.text = str(request.base_url  + '/friends')
+        child_friends.text = str(request.base_url + '/friends')
 
         return Response(tostring(root), mimetype='application/xml'), 200
 
@@ -204,9 +209,9 @@ def listUser(name):
         res = g.update(q)
 
         return redirect('/users/'), 204
-    
-    if request.method == "PUT":  
-        
+
+    if request.method == "PUT":
+
         for item in request.form:
             if not request.form[item] == "":
                 if item in ['name', 'nick', 'gender']:
@@ -229,7 +234,7 @@ def listUser(name):
                         }
                     """
                     res = g.update(q)
-                else :
+                else:
                     q = """
                         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                         PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
@@ -251,7 +256,6 @@ def listUser(name):
                     res = g.update(q)
 
         return "Updated", 200
-        
 
 
 @bp_user.route('/<name>/posts')
@@ -273,7 +277,7 @@ def userPosts(name):
                 """
 
     res = g.query(q)
-    
+
     root = Element('response')
 
     for row in res:
@@ -284,6 +288,7 @@ def userPosts(name):
         tex.text = str(row['text'])
 
     return Response(tostring(root), mimetype='application/xml'), 200
+
 
 @bp_user.route('/<name>/comments')
 def userComments(name):
@@ -299,21 +304,28 @@ def userComments(name):
                         ?s foaf:made ?list .
                         ?list rdf:type mst:Comment .
                         ?list mst:text ?text .
+                        OPTIONAL {
+                            ?list mst:postDate ?date .
+                        }
                     }
                 """
 
     res = g.query(q)
-    
+
     root = Element('response')
 
     for row in res:
         child = SubElement(root, 'post')
         tex = SubElement(child, 'text')
         tex.text = str(row['text'])
+        if row['date']:
+            postDate = SubElement(child, 'postDate')
+            postDate.text = str(row['date'])
 
     return Response(tostring(root), mimetype='application/xml'), 200
 
-@bp_user.route('/<name>/likes')
+
+@bp_user.route('/<name>/likes', methods=['GET', 'PUT', 'DELETE'])
 def userLikes(name):
     q = """
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -330,6 +342,7 @@ def userLikes(name):
 
     res = g.query(q)
     return res.serialize(format='xml')
+
 
 @bp_user.route('/<name>/friends', methods=['GET', 'PUT', 'DELETE'])
 def userFriends(name):
@@ -353,11 +366,12 @@ def userFriends(name):
 
         root = Element('Response')
         for row in res:
-            child = SubElement(root, 'friend', uri = request.host_url + 'users/' + row['nickname'])
+            child = SubElement(
+                root, 'friend', uri=request.host_url + 'users/' + row['nickname'])
             child.text = str(row['name'])
 
         return Response(tostring(root), mimetype='application/xml'), 200
-    
+
     if request.method == 'DELETE':
         nick = request.form['nickname']
 
@@ -381,7 +395,7 @@ def userFriends(name):
         res = g.update(q)
 
         return redirect(request.base_url), 204
-    
+
     if request.method == 'PUT':
         nick = request.form['nickname']
 
