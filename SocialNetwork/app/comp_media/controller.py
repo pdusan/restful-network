@@ -1,4 +1,4 @@
-from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.etree.ElementTree import Element, ElementTree, SubElement, tostring
 from flask import Blueprint, Flask, Response, request
 from rdflib import query
 from app import g
@@ -12,15 +12,54 @@ def listMedia():
                     PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
                     PREFIX ma-ont: <http://www.w3.org/ns/ma-ont#>
 
-                    SELECT DISTINCT ?name
+                    SELECT  ?description ?duration ?locator ?title ?upload 
                     WHERE {
                         ?s rdfs:subClassOf ma-ont:MediaResource .  
-                        ?name a ?s   
+                        ?res a ?s .
+                        OPTIONAL {
+                            ?res ma-ont:title ?title.
+                            OPTIONAL {
+                                ?res ma-ont:description ?description .
+                                OPTIONAL {
+                                    ?res ma-ont:duration ?duration .
+                                    OPTIONAL {
+                                        ?res ma-ont:locator ?locator .
+                                        OPTIONAL {
+                                            ?res ma-ont:title ?title .
+                                            OPTIONAL {
+                                                ?res mst:uploadDate ?upload .
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 """
 
     res = g.query(q)
-    return res.serialize(format='xml')
+
+    root = Element('response')
+    
+    for row in res:
+        child = SubElement(root, 'mediaObject')
+        
+        desc = SubElement(child, 'description')
+        desc.text = str(row['description'])
+
+        dur = SubElement(child, 'duration')
+        dur.text = str(row['duration'])
+
+        loc = SubElement(child, 'locator')
+        loc.text = str(row['locator'])
+
+        title = SubElement(child, 'title')
+        title.text = str(row['title'])
+
+        date = SubElement(child, 'upload')
+        date.text = str(row['upload'])
+
+    return Response(tostring(root)), 200
 
 
 @bp_media.route('/<type>')
@@ -30,11 +69,50 @@ def listMediaType(type):
                     PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
                     PREFIX ma-ont: <http://www.w3.org/ns/ma-ont#>
 
-                    SELECT DISTINCT ?name
+                    SELECT DISTINCT ?description ?duration ?locator ?title ?upload 
                     WHERE {
-                        ?name a mst:""" + str(type) + """ .     
+                        ?res a mst:""" + str(type) + """ .    
+                        OPTIONAL {
+                            ?res ma-ont:title ?title.
+                            OPTIONAL {
+                                ?res ma-ont:description ?description .
+                                OPTIONAL {
+                                    ?res ma-ont:duration ?duration .
+                                    OPTIONAL {
+                                        ?res ma-ont:locator ?locator .
+                                        OPTIONAL {
+                                            ?res ma-ont:title ?title .
+                                            OPTIONAL {
+                                                ?res mst:uploadDate ?upload .
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } 
                     }
                 """
 
     res = g.query(q)
-    return res.serialize(format='xml')
+
+    root = Element('response')
+    
+    for row in res:
+        child = SubElement(root, 'mediaObject')
+        
+        desc = SubElement(child, 'description')
+        desc.text = str(row['description'])
+
+        dur = SubElement(child, 'duration')
+        dur.text = str(row['duration'])
+
+        loc = SubElement(child, 'locator')
+        loc.text = str(row['locator'])
+
+        title = SubElement(child, 'title')
+        title.text = str(row['title'])
+
+        date = SubElement(child, 'upload')
+        date.text = str(row['upload'])
+
+    return Response(tostring(root)), 200

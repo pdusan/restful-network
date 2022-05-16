@@ -1,5 +1,5 @@
 from unicodedata import name
-from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.etree.ElementTree import Element, ElementTree, SubElement, tostring
 from flask import Blueprint, Flask, Response, redirect, request, url_for
 from pyparsing import rest_of_line
 from rdflib import query
@@ -77,7 +77,7 @@ def listUsers():
             nex.text = request.base_url + request.path + \
                 "?page=" + str(int(page_num) + 1)
 
-        return Response(tostring(root), mimetype='application/xml'), 200
+        return Response(tostring(root)), 200
     if request.method == 'POST':
         name = request.form['name']
         nick = request.form['nickname']
@@ -188,7 +188,7 @@ def listUser(name):
         child_friends = SubElement(root, 'friends')
         child_friends.text = str(request.base_url + '/friends')
 
-        return Response(tostring(root), mimetype='application/xml'), 200
+        return Response(tostring(root)), 200
 
     if request.method == "DELETE":
         q = """
@@ -287,7 +287,7 @@ def userPosts(name):
         tex = SubElement(child, 'text')
         tex.text = str(row['text'])
 
-    return Response(tostring(root), mimetype='application/xml'), 200
+    return Response(tostring(root)), 200
 
 
 @bp_user.route('/<name>/comments')
@@ -315,14 +315,14 @@ def userComments(name):
     root = Element('response')
 
     for row in res:
-        child = SubElement(root, 'post')
+        child = SubElement(root, 'comment')
         tex = SubElement(child, 'text')
         tex.text = str(row['text'])
         if row['date']:
             postDate = SubElement(child, 'postDate')
             postDate.text = str(row['date'])
 
-    return Response(tostring(root), mimetype='application/xml'), 200
+    return Response(tostring(root)), 200
 
 
 @bp_user.route('/<name>/likes', methods=['GET', 'PUT', 'DELETE'])
@@ -332,7 +332,7 @@ def userLikes(name):
                     PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
                     PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
 
-                    SELECT DISTINCT ?list
+                    SELECT ?list
                     WHERE {
                         ?s foaf:nick ?t 
                         FILTER(str(?t) = \"""" + str(name) + """\") .
@@ -341,7 +341,13 @@ def userLikes(name):
                 """
 
     res = g.query(q)
-    return res.serialize(format='xml')
+
+    root = Element('response')
+    for row in res:
+        child = SubElement(root, 'like')
+        child.text = str(row['list'])
+    
+    return Response(tostring(root)), 200
 
 
 @bp_user.route('/<name>/friends', methods=['GET', 'PUT', 'DELETE'])
@@ -370,7 +376,7 @@ def userFriends(name):
                 root, 'friend', uri=request.host_url + 'users/' + row['nickname'])
             child.text = str(row['name'])
 
-        return Response(tostring(root), mimetype='application/xml'), 200
+        return Response(tostring(root)), 200
 
     if request.method == 'DELETE':
         nick = request.form['nickname']

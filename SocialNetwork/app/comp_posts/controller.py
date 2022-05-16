@@ -41,20 +41,7 @@ def listPosts():
             author = SubElement(
                 child, 'poster', uri=request.host_url + 'users/' + row['authornick'])
             author.text = str(row['author'])
-        if row['comment']:
-            comments = SubElement(child, 'comments')
-            q = """
-                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
-                    PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
-
-                    SELECT ?text 
-                    WHERE {
-                        ?list rdf:type mst:Post .
-                        ?list mst:postDate ?date .
-                        ?list mst:text ?text .
-                    }
-                """
+        
             
 
-    return Response(tostring(root), mimetype='application/xml'), 200
+    return Response(tostring(root)), 200
