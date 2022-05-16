@@ -133,6 +133,26 @@ def listUsers():
 @bp_user.route('/<name>', methods=['GET', 'PUT', 'DELETE'])
 def listUser(name):
     if request.method == "GET":
+
+        q = """
+            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+            PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
+            PREFIX ma-ont: <http://www.w3.org/ns/ma-ont>
+            PREFIX rdf: <http://www.w3.org/2000/01/rdf-schema#>
+
+            ASK {
+                ?s foaf:nick ?o .
+                FILTER(str(?o) = \"""" + name + """\")
+            }
+        """
+        res = g.query(q)
+        res_list = []
+        for row in res:
+            res_list.append(row)
+
+        if not res_list[0]:
+            return "User with that nickname does not exist", 400
+
         q = """
                         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                         PREFIX mst: <https://mis.cs.univie.ac.at/ontologies/2021SS/mst#>
