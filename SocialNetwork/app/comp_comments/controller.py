@@ -1,4 +1,3 @@
-from ast import keyword
 from xml.etree.ElementTree import Element, SubElement, tostring
 from flask import Blueprint, Flask, Response, request
 from rdflib import query

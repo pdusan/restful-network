@@ -1,7 +1,5 @@
-from unicodedata import name
 from xml.etree.ElementTree import Element, ElementTree, SubElement, tostring
 from flask import Blueprint, Flask, Response, redirect, request, url_for
-from pyparsing import rest_of_line
 from rdflib import query
 from app import g
 
