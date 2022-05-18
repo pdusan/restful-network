@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {%for i in tree%}
+            Media Object: <br><br>
+            {%for j in i%}
+                {%if j.text != "None"%}
+                    {{j.tag}}: {{j.text}} <br>
+                    {%if j.tag == "locator"%}
+                        link: <a href="{{j.text}}">{{j.text}}</a>
+                    {%endif%}<br>
+                {%endif%}
+            {%endfor%}
+            <br><br>
+        {%endfor%}
+    </body>
+</html>

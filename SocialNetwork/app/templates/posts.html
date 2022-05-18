@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {% for i in tree %}
+            Post: <br> <br>
+            Text: {{i.find('./text').text}} <br>
+            Post Date: {{i.find('./postDate').text}} <br>
+            {%if i.find('./poster') != None%}
+                Poster: <a href="{{i.find('./poster').attrib['uri']}}">{{i.find('./poster').text}}</a>
+            {%endif%}
+            <br> <br>
+        {%endfor%}
+    </body>
+</html>

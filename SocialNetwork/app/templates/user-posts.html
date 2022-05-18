@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {% for i in tree%}
+            Post: <br> <br>
+            Text: {{i.find('./text').text}}
+            <br>
+            Posted on: {{i.find('./postDate').text}}
+        {%endfor%}
+    </body>
+</html>

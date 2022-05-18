@@ -67,40 +67,18 @@ def listUsers():
 
         if int(page_num) > 1:
             previous = SubElement(metadata, 'previous')
-            previous.text = request.base_url + request.path + \
+            previous.text = request.base_url  + \
                 "?page=" + str(int(page_num) - 1)
 
         if int(page_num) < max_pages:
             nex = SubElement(metadata, 'next')
-            nex.text = request.base_url + request.path + \
+            nex.text = request.base_url  + \
                 "?page=" + str(int(page_num) + 1)
 
         if request.content_type == 'application/xml':
             return Response(tostring(root), content_type='application/xml'), 200
 
-        template = render_template_string("""
-            <html>
-                <body>
-                    {% for i in tree.find('./users') %}
-                        <a href={{i.attrib['uri']}}> {{i.text}} </a> <br>
-                    {%endfor%}
-                    <br>
-                    <br>
-                    <br> Total Users: {{tree.find('./metadata/total-users')}} <br>
-                    <br>
-                    {% if tree.find('./metadata/previous') != None %}
-                        <a href = {{tree.find('./metadata/previous').text}}> Prev </a>
-                    {%endif%}
-                    
-                    page  {{tree.find('./metadata/page').text}}  /  {{tree.find('./metadata/page-limit').text}}
-                    
-                    {% if tree.find('./metadata/next') != None %}
-                        <a href = {{tree.find('./metadata/next').text}}> Next </a>
-                    {%endif%}
-
-                </body>
-            </html>
-        """, tree=root)
+        template = render_template('user-list.html', tree=root)
         response = make_response(template)
 
         return response, 200
@@ -235,7 +213,13 @@ def listUser(name):
         child_friends = SubElement(root, 'friends')
         child_friends.text = str(request.base_url + '/friends')
 
-        return Response(tostring(root)), 200
+        if request.content_type == 'application/xml':
+            return Response(tostring(root), content_type='application/xml'), 200
+
+        template = render_template('user.html', tree=root)
+        response = make_response(template)
+
+        return response, 200
 
     if request.method == "DELETE":
         q = """
@@ -334,8 +318,13 @@ def userPosts(name):
         tex = SubElement(child, 'text')
         tex.text = str(row['text'])
 
-    return Response(tostring(root)), 200
+    if request.content_type == 'application/xml':
+        return Response(tostring(root), content_type='application/xml'), 200
 
+    template = render_template('user-posts.html', tree=root)
+    response = make_response(template)
+
+    return response, 200
 
 @bp_user.route('/<name>/comments')
 def userComments(name):
@@ -369,7 +358,13 @@ def userComments(name):
             postDate = SubElement(child, 'postDate')
             postDate.text = str(row['date'])
 
-    return Response(tostring(root)), 200
+    if request.content_type == 'application/xml':
+        return Response(tostring(root), content_type='application/xml'), 200
+
+    template = render_template('user-comments.html', tree=root)
+    response = make_response(template)
+
+    return response, 200
 
 
 @bp_user.route('/<name>/likes', methods=['GET', 'PUT', 'DELETE'])
@@ -394,7 +389,13 @@ def userLikes(name):
         child = SubElement(root, 'like')
         child.text = str(row['list'])
 
-    return Response(tostring(root)), 200
+    if request.content_type == 'application/xml':
+        return Response(tostring(root), content_type='application/xml'), 200
+
+    template = render_template('user-likes.html', tree=root)
+    response = make_response(template)
+
+    return response, 200
 
 
 @bp_user.route('/<name>/friends', methods=['GET', 'PUT', 'DELETE'])
@@ -423,7 +424,13 @@ def userFriends(name):
                 root, 'friend', uri=request.host_url + 'users/' + row['nickname'])
             child.text = str(row['name'])
 
-        return Response(tostring(root)), 200
+        if request.content_type == 'application/xml':
+            return Response(tostring(root), content_type='application/xml'), 200
+
+        template = render_template('user-friends.html', tree=root)
+        response = make_response(template)
+
+        return response, 200
 
     if request.method == 'DELETE':
         nick = request.form['nickname']

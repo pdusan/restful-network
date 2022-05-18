@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <br> <br>
+        Name:   {{tree.find('./name').text}}
+        <br> <br>
+        Nickname:    {{tree.find('./nickname').text}}
+        <br> <br>
+        Gender:    {{tree.find('./gender').text}}
+        <br> <br>
+        Birthday:    {{tree.find('./birthday').text}}
+        <br> <br>
+        Email:     {{tree.find('./email').text}}
+        <br> <br>
+        Date Joined:    {{tree.find('./joined').text}}
+        <br> <br>
+        Posts:   <a href="{{tree.find('./posts').text}}">{{tree.find('./nickname').text}}'s posts</a>
+        <br> <br>
+        Comments:   <a href="{{tree.find('./comments').text}}">{{tree.find('./nickname').text}}'s comments</a>
+        <br> <br>
+        Likes:    <a href="{{tree.find('./likes').text}}">{{tree.find('./nickname').text}}'s likes</a>
+        <br> <br>
+        Friends:   <a href="{{tree.find('./friends').text}}">{{tree.find('./nickname').text}}'s friends</a>
+    </body>
+</html>

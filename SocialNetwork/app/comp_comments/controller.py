@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element, SubElement, tostring
-from flask import Blueprint, Flask, Response, request
+from flask import Blueprint, Flask, Response, request, render_template, make_response
 from rdflib import query
 from app import g
 
@@ -79,4 +79,10 @@ def listComments():
                 child, 'commenter', uri=request.host_url + 'users/' + row['authornick'])
             author.text = str(row['author'])
 
-    return Response(tostring(root)), 200
+    if request.content_type == 'application/xml':
+        return Response(tostring(root), content_type='application/xml'), 200
+
+    template = render_template('comments.html', tree=root)
+    response = make_response(template)
+
+    return response, 200

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {% for i in tree%}
+            Comment: <br> <br>
+            Text: {{i.find('./text').text}}
+            <br>
+            {% if i.find('./posyDate') != None %}
+                Posted on: {{i.find('./postDate').text}}
+            {%endif%}
+            <br>
+            Commenter: <a href="{{i.find('./commenter').attrib['uri']}}">{{i.find('./commenter').text}}</a>
+            <br><br>
+        {%endfor%}
+    </body>
+</html>

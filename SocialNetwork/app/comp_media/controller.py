@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element, ElementTree, SubElement, tostring
-from flask import Blueprint, Flask, Response, request
+from flask import Blueprint, Flask, Response, request, render_template, make_response
 from rdflib import query
 from app import g
 
@@ -59,7 +59,13 @@ def listMedia():
         date = SubElement(child, 'upload')
         date.text = str(row['upload'])
 
-    return Response(tostring(root)), 200
+    if request.content_type == 'application/xml':
+        return Response(tostring(root), content_type='application/xml'), 200
+
+    template = render_template('media.html', tree=root)
+    response = make_response(template)
+
+    return response, 200
 
 
 @bp_media.route('/<type>')
@@ -115,4 +121,10 @@ def listMediaType(type):
         date = SubElement(child, 'upload')
         date.text = str(row['upload'])
 
-    return Response(tostring(root)), 200
+    if request.content_type == 'application/xml':
+        return Response(tostring(root), content_type='application/xml'), 200
+
+    template = render_template('media.html', tree=root)
+    response = make_response(template)
+
+    return response, 200

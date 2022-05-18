@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {% for i in tree %}
+        <a href={{i.attrib['uri']}}> {{i.text}} </a> <br>
+        {%endfor%}
+    </body>
+</html>

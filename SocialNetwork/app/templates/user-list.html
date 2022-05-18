@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    {% for i in tree.find('./users') %}
+    <a href={{i.attrib['uri']}}> {{i.text}} </a> <br>
+    {%endfor%}
+    <br>
+    <br>
+    <br> Total Users: {{tree.find('./metadata/total-users').text}} <br>
+    <br>
+
+    <br> Users per page: {{tree.find('./metadata/page-limit').text}} <br> <br>
+
+    page {{tree.find('./metadata/page').text}}
+
+    <br> <br>
+    {% if tree.find('./metadata/previous') != None %}
+    <a href={{tree.find('./metadata/previous').text}}> Prev </a>
+    {%endif%}
+
+    {% if tree.find('./metadata/next') != None %}
+    <a href={{tree.find('./metadata/next').text}}> Next </a>
+    {%endif%}
+
+</body>
+
+</html>
