@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element, ElementTree, SubElement, tostring
-from flask import Blueprint, Flask, Response, redirect, request, url_for
+from flask import Blueprint, Flask, Response, make_response, redirect, render_template, render_template_string, request, url_for
 from rdflib import query
 from app import g
 
@@ -75,7 +75,36 @@ def listUsers():
             nex.text = request.base_url + request.path + \
                 "?page=" + str(int(page_num) + 1)
 
-        return Response(tostring(root)), 200
+        if request.content_type == 'application/xml':
+            return Response(tostring(root), content_type='application/xml'), 200
+
+        template = render_template_string("""
+            <html>
+                <body>
+                    {% for i in tree.find('./users') %}
+                        <a href={{i.attrib['uri']}}> {{i.text}} </a> <br>
+                    {%endfor%}
+                    <br>
+                    <br>
+                    <br> Total Users: {{tree.find('./metadata/total-users')}} <br>
+                    <br>
+                    {% if tree.find('./metadata/previous') != None %}
+                        <a href = {{tree.find('./metadata/previous').text}}> Prev </a>
+                    {%endif%}
+                    
+                    page  {{tree.find('./metadata/page').text}}  /  {{tree.find('./metadata/page-limit').text}}
+                    
+                    {% if tree.find('./metadata/next') != None %}
+                        <a href = {{tree.find('./metadata/next').text}}> Next </a>
+                    {%endif%}
+
+                </body>
+            </html>
+        """, tree=root)
+        response = make_response(template)
+
+        return response, 200
+
     if request.method == 'POST':
         name = request.form['name']
         nick = request.form['nickname']
@@ -364,7 +393,7 @@ def userLikes(name):
     for row in res:
         child = SubElement(root, 'like')
         child.text = str(row['list'])
-    
+
     return Response(tostring(root)), 200
 
 
